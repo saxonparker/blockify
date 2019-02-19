@@ -1,50 +1,10 @@
 import json
 import urlparse
 
-
-def lambda_handler(event, context):
-    print event
-     
-    params = urlparse.parse_qs(event['body'])
-    message = ''
-    if 'text' not in params or not params['text']:
-        message = 'Bad Request'
-        return {
-            'statusCode': str(200),
-            'body': json.dumps({'text': message}),
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            }
-        }
-    
-    command = params['text'][0]
-    print command
-    opts = command.split(' ')
-    print opts
-    if len(opts) < 2:
-        message = 'Must provide emoji and text'
-        return {
-            'statusCode': str(200),
-            'body': json.dumps({'text': message}),
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            }
-        }
-    
-    e = opts[0]
-    text = command[(len(e)+1):]
-    
+def create_letters(e):
     b = ':blank:'
-    #e = event['queryStringParameters']['emoji']
-    if e[0] != ':':
-        e = ':' + e
-    if e[-1] != ':':
-        e += ':'
-
     letters = []
-    
+
     a = [
         b + e + b,
         e + b + e,
@@ -278,7 +238,11 @@ def lambda_handler(event, context):
         e + e + e,  
         ]
     letters.append(z)
-    
+
+    return letters
+
+def create_numbers(e):
+    b = ':blank:'
     numbers = []
     zero = [
         b + e + b,
@@ -369,20 +333,68 @@ def lambda_handler(event, context):
         e + e + b,  
         ]
     numbers.append(nine)
+
+    return numbers
+
+def lambda_handler(event, context):
+    print event
+     
+    params = urlparse.parse_qs(event['body'])
+    message = ''
+    if 'text' not in params or not params['text']:
+        message = 'Bad Request'
+        return {
+            'statusCode': str(200),
+            'body': json.dumps({'text': message}),
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
     
+    command = params['text'][0]
+    print command
+    opts = command.split(' ')
+    print opts
+    if len(opts) < 2:
+        message = 'Must provide emoji and text'
+        return {
+            'statusCode': str(200),
+            'body': json.dumps({'text': message}),
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
+    
+    e = opts[0]
+    text = command[(len(e)+1):]
+    
+    if e[0] != ':':
+        e = ':' + e
+    if e[-1] != ':':
+        e += ':'
+
+    letters = create_letters(e)
+    numbers = create_numbers(e)
+
+   
     blockheight = 5
-    for i in range(blockheight):
-        line = ''
-        for char in text:
-            if len(line) != 0:
-                line += b
-            if char.isalpha():
-                block = letters[ord(char.lower()) - ord('a')][i]
-                line += block
-            elif char.isdigit():
-                block = numbers[ord(char) - ord('0')][i]
-                line += block
-        message += line + '\n'
+    b = ':blank:'
+    for word in text.split():
+        for i in range(blockheight):
+            line = ''
+            for char in word:
+                if len(line) != 0:
+                    line += b
+                if char.isalpha():
+                    block = letters[ord(char.lower()) - ord('a')][i]
+                    line += block
+                elif char.isdigit():
+                    block = numbers[ord(char) - ord('0')][i]
+                    line += block
+            message += line + '\n'
+        message += '\n\n'
 
     return {
         'statusCode': str(200),
@@ -392,3 +404,31 @@ def lambda_handler(event, context):
             'Access-Control-Allow-Origin': '*'
         }
     }
+
+def main():
+    e = ':doge:'
+    text = 'doge doge'
+    letters = create_letters(e)
+    numbers = create_numbers(e)
+    b = ':blank:'
+    message = ''
+    blockheight = 5
+
+    for word in text.split():
+        for i in range(blockheight):
+            line = ''
+            for char in word:
+                if len(line) != 0:
+                    line += b
+                if char.isalpha():
+                    block = letters[ord(char.lower()) - ord('a')][i]
+                    line += block
+                elif char.isdigit():
+                    block = numbers[ord(char) - ord('0')][i]
+                    line += block
+            message += line + '\n'
+        message += '\n\n'
+    print message
+
+if __name__ == "__main__":
+    main()
