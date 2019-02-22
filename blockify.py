@@ -344,10 +344,16 @@ def construct_message(options):
     help="""The emojis to use to make characters. This must be a single string.
           The code will split on \':\'""")
     parser.add_argument('text', nargs='+', help='The text to print')
+    parser.add_argument('-l', action='store_true', help='Use multiple emojis per letter. If theres only one word to print this will be default')
 
     args = parser.parse_args(options)
     
     text = args.text
+
+    per_letter = args.l
+    if len(text) == 1:
+        per_letter = True
+    
     emojis = args.emojis.split(':')
     emojis = [e for e in emojis if e]
 
@@ -370,6 +376,8 @@ def construct_message(options):
     for word in text:
         for i in range(blockheight):
             line = ''
+            if per_letter:
+                e = 0
             for char in word:
                 if len(line) != 0:
                     line += b
@@ -379,6 +387,8 @@ def construct_message(options):
                 elif char.isdigit():
                     block = numbers[e % len(numbers)][ord(char) - ord('0')][i]
                     line += block
+                if per_letter:
+                    e = e + 1
             message += line + '\n'
         message += '\n\n'
         e = e + 1
