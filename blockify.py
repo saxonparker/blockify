@@ -347,21 +347,26 @@ def construct_message(options):
 
     args = parser.parse_args(options)
     
-    e = args.emojis
     text = args.text
-    
-    if e[0] != ':':
-        e = ':' + e
-    if e[-1] != ':':
-        e += ':'
-    print e
-    print text
-    letters = create_letters(e)
-    numbers = create_numbers(e)
+    emojis = args.emojis.split(':')
+    emojis = [e for e in emojis if e]
+
+    for i in range(len(emojis)):
+        if emojis[i][0] != ':':
+           emojis[i] = ':' + emojis[i]
+        if emojis[i][-1] != ':':
+            emojis[i] += ':'
+
+    letters = []
+    numbers = []
+    for e in emojis:
+        letters.append(create_letters(e))
+        numbers.append(create_numbers(e))
     b = ':blank:'
     message = ''
     blockheight = 5
 
+    e = 0
     for word in text:
         for i in range(blockheight):
             line = ''
@@ -369,13 +374,14 @@ def construct_message(options):
                 if len(line) != 0:
                     line += b
                 if char.isalpha():
-                    block = letters[ord(char.lower()) - ord('a')][i]
+                    block = letters[e % len(letters)][ord(char.lower()) - ord('a')][i]
                     line += block
                 elif char.isdigit():
-                    block = numbers[ord(char) - ord('0')][i]
+                    block = numbers[e % len(numbers)][ord(char) - ord('0')][i]
                     line += block
             message += line + '\n'
         message += '\n\n'
+        e = e + 1
     return message
 
 def lambda_handler(event, context):
