@@ -1,5 +1,7 @@
 import json
 import urlparse
+import argparse
+import sys
 
 def create_letters(e):
     b = ':blank:'
@@ -336,6 +338,46 @@ def create_numbers(e):
 
     return numbers
 
+def construct_message(options):
+    parser = argparse.ArgumentParser(description='Print block letters made of emojis')
+    parser.add_argument('emojis', 
+    help="""The emojis to use to make characters. This must be a single string.
+          The code will split on \':\'""")
+    parser.add_argument('text', nargs='+', help='The text to print')
+
+    args = parser.parse_args(options)
+    
+    e = args.emojis
+    text = args.text
+    
+    if e[0] != ':':
+        e = ':' + e
+    if e[-1] != ':':
+        e += ':'
+    print e
+    print text
+    letters = create_letters(e)
+    numbers = create_numbers(e)
+    b = ':blank:'
+    message = ''
+    blockheight = 5
+
+    for word in text:
+        for i in range(blockheight):
+            line = ''
+            for char in word:
+                if len(line) != 0:
+                    line += b
+                if char.isalpha():
+                    block = letters[ord(char.lower()) - ord('a')][i]
+                    line += block
+                elif char.isdigit():
+                    block = numbers[ord(char) - ord('0')][i]
+                    line += block
+            message += line + '\n'
+        message += '\n\n'
+    return message
+
 def lambda_handler(event, context):
     print event
      
@@ -367,34 +409,7 @@ def lambda_handler(event, context):
             }
         }
     
-    e = opts[0]
-    text = command[(len(e)+1):]
-    
-    if e[0] != ':':
-        e = ':' + e
-    if e[-1] != ':':
-        e += ':'
-
-    letters = create_letters(e)
-    numbers = create_numbers(e)
-
-   
-    blockheight = 5
-    b = ':blank:'
-    for word in text.split():
-        for i in range(blockheight):
-            line = ''
-            for char in word:
-                if len(line) != 0:
-                    line += b
-                if char.isalpha():
-                    block = letters[ord(char.lower()) - ord('a')][i]
-                    line += block
-                elif char.isdigit():
-                    block = numbers[ord(char) - ord('0')][i]
-                    line += block
-            message += line + '\n'
-        message += '\n\n'
+    message = construct_message(opts)
 
     return {
         'statusCode': str(200),
@@ -406,28 +421,7 @@ def lambda_handler(event, context):
     }
 
 def main():
-    e = ':doge:'
-    text = 'doge doge'
-    letters = create_letters(e)
-    numbers = create_numbers(e)
-    b = ':blank:'
-    message = ''
-    blockheight = 5
-
-    for word in text.split():
-        for i in range(blockheight):
-            line = ''
-            for char in word:
-                if len(line) != 0:
-                    line += b
-                if char.isalpha():
-                    block = letters[ord(char.lower()) - ord('a')][i]
-                    line += block
-                elif char.isdigit():
-                    block = numbers[ord(char) - ord('0')][i]
-                    line += block
-            message += line + '\n'
-        message += '\n\n'
+    message = construct_message(sys.argv[1:])
     print message
 
 if __name__ == "__main__":
