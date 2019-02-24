@@ -338,6 +338,38 @@ def create_numbers(e):
 
     return numbers
 
+def create_symbols(e):
+    b = ':blank:'
+    symbols = {}
+    question = [
+        e + e + e,
+        e + b + e,
+        b + b + e,
+        b + e + b,
+        b + e + b,
+        ]
+    symbols['?'] = question
+
+    exclamation = [
+        b + e + b,
+        b + e + b,
+        b + e + b,
+        b + b + b,
+        b + e + b,
+        ]
+    symbols['!'] = exclamation
+
+    #Can't really form a good dollar sign interpretation with 3x5 resolution.
+    dollarSign = [
+        e + e + e,
+        e + e + b,
+        e + e + e,
+        b + e + e,
+        e + e + e,
+        ]
+    symbols['$'] = dollarSign
+    return symbols
+
 def construct_message(options):
     parser = argparse.ArgumentParser(description='Print block letters made of emojis')
     parser.add_argument('emojis', 
@@ -365,13 +397,16 @@ def construct_message(options):
 
     letters = []
     numbers = []
+    symbols = []
+    symbol_keys = create_symbols('a').keys()
     for e in emojis:
         letters.append(create_letters(e))
         numbers.append(create_numbers(e))
+        symbols.append(create_symbols(e))
+
     b = ':blank:'
     message = ''
     blockheight = 5
-
     e = 0
     for word in text:
         for i in range(blockheight):
@@ -386,6 +421,9 @@ def construct_message(options):
                     line += block
                 elif char.isdigit():
                     block = numbers[e % len(numbers)][ord(char) - ord('0')][i]
+                    line += block
+                elif char in symbol_keys: #There does not appear to be a built-in check for symbols.
+                    block = symbols[e% len(symbols)][char][i]
                     line += block
                 if per_letter:
                     e = e + 1
