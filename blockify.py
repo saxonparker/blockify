@@ -368,6 +368,33 @@ def create_symbols(e):
         e + e + e,
         ]
     symbols['$'] = dollarSign
+
+    equal = [
+        b + b + b,
+        e + e + e,
+        b + b + b,
+        e + e + e,
+        b + b + b,
+    ]
+    symbols['='] = equal
+
+    minus = [
+        b + b + b,
+        b + b + b,
+        e + e + e,
+        b + b + b,
+        b + b + b,
+    ]
+    symbols['-'] = minus
+
+    plus = [
+        b + b + b,
+        b + e + b,
+        e + e + e,
+        b + e + b,
+        b + b + b,
+    ]  
+    symbols['+'] = plus
     return symbols
 
 def construct_message(options):
