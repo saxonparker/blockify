@@ -395,6 +395,12 @@ def construct_message(options):
         if emojis[i][-1] != ':':
             emojis[i] += ':'
 
+    for i in range(len(emojis)):
+        if 'skin-tone' in emojis[i]:
+            if i > 0:
+                emojis[i-1] = emojis[i-1] + emojis[i]
+            del emojis[i]
+
     letters = []
     numbers = []
     symbols = []
