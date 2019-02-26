@@ -442,10 +442,11 @@ def construct_message(options):
     blockheight = 5
     e = 0
     for word in text:
+        wordstart = e
         for i in range(blockheight):
             line = ''
             if per_letter:
-                e = 0
+                e = wordstart
             for char in word:
                 if len(line) != 0:
                     line += b
@@ -462,7 +463,8 @@ def construct_message(options):
                     e = e + 1
             message += line + '\n'
         message += '\n\n'
-        e = e + 1
+        if not per_letter:
+            e = e + 1
     return message
 
 def lambda_handler(event, context):
