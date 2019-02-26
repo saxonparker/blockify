@@ -427,6 +427,11 @@ def construct_message(options):
             if i > 0:
                 emojis[i-1] = emojis[i-1] + emojis[i]
             del emojis[i]
+    
+    # If only skin-tone was provided, the emoji array could be empty now, which will
+    # cause an error below
+    if len(emojis) == 0:
+        return 'Cannot provide only a skin-tone emoji'
 
     letters = []
     numbers = []
