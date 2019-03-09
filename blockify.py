@@ -3,8 +3,8 @@ import urlparse
 import argparse
 import sys
 
-def create_letters(e):
-    b = ':blank:'
+
+def create_letters(e, b):
     letters = []
 
     a = [
@@ -12,7 +12,7 @@ def create_letters(e):
         e + b + e,
         e + e + e,
         e + b + e,
-        e + b + e,  
+        e + b + e,
         ]
     letters.append(a)
     
@@ -243,7 +243,8 @@ def create_letters(e):
 
     return letters
 
-def create_numbers(e):
+
+def create_numbers(e, b):
     b = ':blank:'
     numbers = []
     zero = [
@@ -338,7 +339,7 @@ def create_numbers(e):
 
     return numbers
 
-def create_symbols(e):
+def create_symbols(e, b):
     b = ':blank:'
     symbols = {}
     question = [
@@ -404,6 +405,7 @@ def construct_message(options):
           The code will split on \':\'""")
     parser.add_argument('text', nargs='+', help='The text to print')
     parser.add_argument('-l', action='store_true', help='Use multiple emojis per letter. If theres only one word to print this will be default')
+    parser.add_argument('-b', action='store', dest='blank', default=':blank:', help='Specify the emoji to use for blank space')
 
     args = parser.parse_args(options)
     
@@ -433,16 +435,21 @@ def construct_message(options):
     if len(emojis) == 0:
         return 'Cannot provide only a skin-tone emoji'
 
+    blank = args.blank
+    if blank[0] != ':':
+        blank = ':' + blank
+    if blank[-1] != ':':
+        blank += ':'
+
     letters = []
     numbers = []
     symbols = []
-    symbol_keys = create_symbols('a').keys()
+    symbol_keys = create_symbols('a', blank).keys()
     for e in emojis:
-        letters.append(create_letters(e))
-        numbers.append(create_numbers(e))
-        symbols.append(create_symbols(e))
+        letters.append(create_letters(e, blank))
+        numbers.append(create_numbers(e, blank))
+        symbols.append(create_symbols(e, blank))
 
-    b = ':blank:'
     message = ''
     blockheight = 5
     e = 0
@@ -454,7 +461,7 @@ def construct_message(options):
                 e = wordstart
             for char in word:
                 if len(line) != 0:
-                    line += b
+                    line += blank
                 if char.isalpha():
                     block = letters[e % len(letters)][ord(char.lower()) - ord('a')][i]
                     line += block
@@ -473,7 +480,7 @@ def construct_message(options):
     return message
 
 def lambda_handler(event, context):
-    print event
+    print(event)
      
     params = urlparse.parse_qs(event['body'])
     message = ''
@@ -489,9 +496,9 @@ def lambda_handler(event, context):
         }
     
     command = params['text'][0]
-    print command
+    print(command)
     opts = command.split(' ')
-    print opts
+    print(opts)
     if len(opts) < 2:
         message = 'Must provide emoji and text'
         return {
@@ -516,7 +523,7 @@ def lambda_handler(event, context):
 
 def main():
     message = construct_message(sys.argv[1:])
-    print message
+    print(message)
 
 if __name__ == "__main__":
     main()
