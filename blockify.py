@@ -245,7 +245,6 @@ def create_letters(e, b):
 
 
 def create_numbers(e, b):
-    b = ':blank:'
     numbers = []
     zero = [
         b + e + b,
@@ -340,7 +339,6 @@ def create_numbers(e, b):
     return numbers
 
 def create_symbols(e, b):
-    b = ':blank:'
     symbols = {}
     question = [
         e + e + e,
@@ -396,7 +394,27 @@ def create_symbols(e, b):
         b + b + b,
     ]  
     symbols['+'] = plus
+
+    apostrophe = [
+       e,
+       e,
+       b,
+       b,
+       b,
+    ]
+    symbols['\''] = apostrophe
+
+    hashtag = [
+        b + e + b + e + b,
+        e + e + e + e + e,
+        b + e + b + e + b,
+        e + e + e + e + e,
+        b + e + b + e + b,
+    ]
+    symbols['#'] = hashtag
+
     return symbols
+
 
 def construct_message(options):
     parser = argparse.ArgumentParser(description='Print block letters made of emojis')
