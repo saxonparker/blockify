@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="blockify.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<form>
+    Emojis:<br>
+    <input type="text" id="emj" name="emojis"><br>
+    Text:<br>
+    <input type="text" id="txt" name="text">
+</form>
+
+<form>
+    <input type="radio" id="word_incr" name="emoji_incr" value="word" checked> Word<br>
+    <input type="radio" id="letter_incr" name="emoji_incr" value="letter"> Letter<br>
+    <input type="radio" id="random_incr" name="emoji_incr" value="random"> Random
+</form>
+
+<button onclick="process_input()">Blockify</button>
+
+<p id="output"></p>
+
+<button onclick="copy_to_clipboard()">Copy text</button>
+
+<script>
+    function process_input() {
+        var em = document.getElementById("emj").value.replace(/\s+/g, '');
+        var txt = document.getElementById("txt").value.toLowerCase();
+        var letter = false;
+        var random = false;
+        if (document.getElementById("letter_incr").checked)
+        {
+            letter = true;
+        }
+        else if (document.getElementById("random_incr").checked)
+        {
+            random = true;
+        }
+
+        var output = blockify(em, txt, letter, random);
+        document.getElementById("output").innerHTML = output;
+    }
+
+    function copy_to_clipboard() {
+        /* Get the text field */
+        var copyText = document.getElementById("output").innerText;
+
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+
+        /* Alert the copied text */
+        alert("Copied!");
+}
+</script>
+
+
+</body>
+</html>
