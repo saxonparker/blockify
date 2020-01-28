@@ -248,16 +248,28 @@ function blockify(emojis, text, per_letter, random)
     var result = "";
 
     var code_emojis = [];
-    var index = 0;
-    while (emojis.codePointAt(index) != undefined)
+    var array_index = 0;
+    var code_index = 0;
+    while (emojis.codePointAt(code_index) != undefined)
     {
-        var codepoint = emojis.codePointAt(index);
-        code_emojis.push(codepoint);
+        var codepoint = emojis.codePointAt(code_index);
+        // Handle zero-width join character
+        if (codepoint == 0xFE0F)
+        {
+            code_emojis[array_index-1].push(codepoint);
+            code_index++;
+            continue;
+        }
+        
+        code_emojis[array_index] = []
+        code_emojis[array_index].push(codepoint);
+
         if (codepoint > 0x10000)
         {
-            index++;
+            code_index++;
         }
-        index++;
+        code_index++;
+        array_index++;
     }
 
     for (w = 0; w < words.length; ++w)
@@ -283,17 +295,22 @@ function blockify(emojis, text, per_letter, random)
                         {
                             em += i;
                         }
-                        result += String.fromCodePoint(code_emojis[em % code_emojis.length]);
+
+                        var to_print = code_emojis[em % code_emojis.length];
+                        for (ee = 0; ee < to_print.length; ++ee)
+                        {
+                            result += String.fromCodePoint(code_emojis[em % code_emojis.length][ee]);
+                        }
                     }
                     else
                     {
-                        result += "\u2b1c";
+                        result += "\u200B" + "\u2003" + "\u2005";//"\u2b1c" + "\ufe0f";
                     }
                 }
 
                 if (i < word.length - 1)
                 {
-                    result += "\u2b1c";
+                    result += "\u200B" + "\u2003" + "\u2005";//"\u2b1c" + "\ufe0f";
                 }
             }
 
@@ -308,12 +325,13 @@ function blockify(emojis, text, per_letter, random)
         {
             cur_emoji++;
         }
-        result += "<br>";
+
+        if (w < words.length-1)
+        {
+            result += "<br>";
+        }
     }
 
     return result;
 }
 
-var output = blockify(String.fromCodePoint(0x1F697)+String.fromCodePoint(0x1F600), "herps derp", true, true);
-//alert(output);
-//console.log(output);
