@@ -1,420 +1,413 @@
-import json
-import urlparse
 import argparse
+import json
+import random
 import sys
-
+import urllib.parse
 
 e = 'e'
 b = 'b'
 
-letters = []
+characters = {}
 
-a = [
+_a = [
     b + e + b,
     e + b + e,
     e + e + e,
     e + b + e,
     e + b + e,
 ]
-letters.append(a)
 
-B = [
+_b = [
     e + e + b,
     e + b + e,
     e + e + b,
     e + b + e,
-        e + e + b,
+    e + e + b,
 ]
-letters.append(B)
 
-c = [
+_c = [
     e + e + e,
     e + b + b,
     e + b + b,
     e + b + b,
-        e + e + e,
+    e + e + e,
 ]
-letters.append(c)
 
-d = [
+_d = [
     e + e + b,
     e + b + e,
     e + b + e,
     e + b + e,
-        e + e + b,
+    e + e + b,
 ]
-letters.append(d)
 
-E = [
+_e = [
     e + e + e,
     e + b + b,
     e + e + e,
     e + b + b,
-        e + e + e,
+    e + e + e,
 ]
-letters.append(E)
 
-f = [
+_f = [
     e + e + e,
     e + b + b,
     e + e + e,
     e + b + b,
-        e + b + b,
+    e + b + b,
 ]
-letters.append(f)
 
-g = [
+_g = [
     b + e + e,
     e + b + b,
     e + b + e,
     e + b + e,
     b + e + e,
 ]
-letters.append(g)
 
-h = [
+_h = [
     e + b + e,
     e + b + e,
     e + e + e,
     e + b + e,
-        e + b + e,
+    e + b + e,
 ]
-letters.append(h)
 
-i = [
+_i = [
     e + e + e,
     b + e + b,
     b + e + b,
     b + e + b,
     e + e + e,
 ]
-letters.append(i)
 
-j = [
+_j = [
     b + b + e,
-        b + b + e,
-        b + b + e,
-        e + b + e,
-        e + e + e,
+    b + b + e,
+    b + b + e,
+    e + b + e,
+    e + e + e,
 ]
-letters.append(j)
 
-k = [
+_k = [
     e + b + e,
     e + b + e,
     e + e + b,
     e + b + e,
-        e + b + e,
+    e + b + e,
 ]
-letters.append(k)
 
-l = [
+_l = [
     e + b + b,
     e + b + b,
     e + b + b,
     e + b + b,
-        e + e + e
+    e + e + e
 ]
-letters.append(l)
 
-m = [
+_m = [
     e + b + b + b + e,
     e + e + b + e + e,
     e + b + e + b + e,
     e + b + b + b + e,
     e + b + b + b + e,
 ]
-letters.append(m)
 
-n = [
+_n = [
     e + e + e,
     e + b + e,
     e + b + e,
     e + b + e,
-        e + b + e,
+    e + b + e,
 ]
-letters.append(n)
 
-o = [
+_o = [
     e + e + e,
     e + b + e,
     e + b + e,
     e + b + e,
-        e + e + e,
+    e + e + e,
 ]
-letters.append(o)
 
-p = [
+_p = [
     e + e + e,
     e + b + e,
     e + e + e,
     e + b + b,
-        e + b + b,
+    e + b + b,
 ]
-letters.append(p)
 
-q = [
+_q = [
     e + e + e + b,
     e + b + e + b,
     e + b + e + b,
     e + b + e + b,
     e + e + e + e,
 ]
-letters.append(q)
 
-r = [
+_r = [
     e + e + b,
     e + b + e,
     e + e + b,
     e + b + e,
     e + b + e,
 ]
-letters.append(r)
 
-s = [
+_s = [
     b + e + e,
     e + b + b,
     b + e + b,
-        b + b + e,
-        e + e + b,
+    b + b + e,
+    e + e + b,
 ]
-letters.append(s)
 
-t = [
+_t = [
     e + e + e,
     b + e + b,
     b + e + b,
     b + e + b,
     b + e + b,
 ]
-letters.append(t)
 
-u = [
+_u = [
     e + b + e,
     e + b + e,
     e + b + e,
     e + b + e,
-        e + e + e,
+    e + e + e,
 ]
-letters.append(u)
 
-v = [
+_v = [
     e + b + e,
     e + b + e,
     e + b + e,
     e + b + e,
     b + e + b,
 ]
-letters.append(v)
 
-w = [
+_w = [
     e + b + b + b + e,
     e + b + b + b + e,
     e + b + e + b + e,
     e + e + b + e + e,
-        e + b + b + b + e,
+    e + b + b + b + e,
 ]
-letters.append(w)
 
-x = [
+_x = [
     e + b + e,
     e + b + e,
     b + e + b,
     e + b + e,
     e + b + e,
 ]
-letters.append(x)
 
-y = [
+_y = [
     e + b + e,
     e + b + e,
     e + e + e,
     b + e + b,
-        b + e + b,
+    b + e + b,
 ]
-letters.append(y)
 
-z = [
+_z = [
     e + e + e,
     b + b + e,
     b + e + b,
     e + b + b,
     e + e + e,
 ]
-letters.append(z)
 
+characters['a'] = _a
+characters['b'] = _b
+characters['c'] = _c
+characters['d'] = _d
+characters['e'] = _e
+characters['f'] = _f
+characters['g'] = _g
+characters['h'] = _h
+characters['i'] = _i
+characters['j'] = _j
+characters['k'] = _k
+characters['l'] = _l
+characters['m'] = _m
+characters['n'] = _n
+characters['o'] = _o
+characters['p'] = _p
+characters['q'] = _q
+characters['r'] = _r
+characters['s'] = _s
+characters['t'] = _t
+characters['u'] = _u
+characters['v'] = _v
+characters['w'] = _w
+characters['x'] = _x
+characters['y'] = _y
+characters['z'] = _z
 
-def create_numbers(e, b):
-    numbers = []
-    zero = [
-        b + e + b,
-        e + b + e,
-        e + b + e,
-        e + b + e,
-        b + e + b,
-    ]
-    numbers.append(zero)
+_0 = [
+    b + e + b,
+    e + b + e,
+    e + b + e,
+    e + b + e,
+    b + e + b,
+]
 
-    one = [
-        b + e + b,
-        e + e + b,
-        b + e + b,
-        b + e + b,
-        e + e + e,
-    ]
-    numbers.append(one)
+_1 = [
+    b + e + b,
+    e + e + b,
+    b + e + b,
+    b + e + b,
+    e + e + e,
+]
 
-    two = [
-        e + e + b,
-        b + b + e,
-        b + e + b,
-        e + b + b,
-        e + e + e,
-    ]
-    numbers.append(two)
+_2 = [
+    e + e + b,
+    b + b + e,
+    b + e + b,
+    e + b + b,
+    e + e + e,
+]
 
-    three = [
-        e + e + e,
-        b + b + e,
-        b + e + e,
-        b + b + e,
-        e + e + e,
-    ]
-    numbers.append(three)
+_3 = [
+    e + e + e,
+    b + b + e,
+    b + e + e,
+    b + b + e,
+    e + e + e,
+]
 
-    four = [
-        e + b + e,
-        e + b + e,
-        e + e + e,
-        b + b + e,
-        b + b + e,
-    ]
-    numbers.append(four)
+_4 = [
+    e + b + e,
+    e + b + e,
+    e + e + e,
+    b + b + e,
+    b + b + e,
+]
 
-    five = [
-        e + e + e,
-        e + b + b,
-        e + e + e,
-        b + b + e,
-        e + e + b,
-    ]
-    numbers.append(five)
+_5 = [
+    e + e + e,
+    e + b + b,
+    e + e + e,
+    b + b + e,
+    e + e + b,
+]
 
-    six = [
-        b + e + e,
-        e + b + b,
-        e + e + e,
-        e + b + e,
-        e + e + e,
-    ]
-    numbers.append(six)
+_6 = [
+    b + e + e,
+    e + b + b,
+    e + e + e,
+    e + b + e,
+    e + e + e,
+]
 
-    seven = [
-        e + e + e,
-        b + b + e,
-        b + e + b,
-        e + b + b,
-        e + b + b,
-    ]
-    numbers.append(seven)
+_7 = [
+    e + e + e,
+    b + b + e,
+    b + e + b,
+    e + b + b,
+    e + b + b,
+]
 
-    eight = [
-        e + e + e,
-        e + b + e,
-        e + e + e,
-        e + b + e,
-        e + e + e,
-    ]
-    numbers.append(eight)
+_8 = [
+    e + e + e,
+    e + b + e,
+    e + e + e,
+    e + b + e,
+    e + e + e,
+]
 
-    nine = [
-        e + e + e,
-        e + b + e,
-        e + e + e,
-        b + b + e,
-        e + e + b,
-    ]
-    numbers.append(nine)
+_9 = [
+    e + e + e,
+    e + b + e,
+    e + e + e,
+    b + b + e,
+    e + e + b,
+]
 
-    return numbers
+characters['0'] = _0
+characters['1'] = _1
+characters['2'] = _2
+characters['3'] = _3
+characters['4'] = _4
+characters['5'] = _5
+characters['6'] = _6
+characters['7'] = _7
+characters['8'] = _8
+characters['9'] = _9
 
+_question = [
+    e + e + e,
+    e + b + e,
+    b + b + e,
+    b + e + b,
+    b + e + b,
+]
 
-def create_symbols(e, b):
-    symbols = {}
-    question = [
-        e + e + e,
-        e + b + e,
-        b + b + e,
-        b + e + b,
-        b + e + b,
-    ]
-    symbols['?'] = question
+_exclamation = [
+    b + e + b,
+    b + e + b,
+    b + e + b,
+    b + b + b,
+    b + e + b,
+]
 
-    exclamation = [
-        b + e + b,
-        b + e + b,
-        b + e + b,
-        b + b + b,
-        b + e + b,
-    ]
-    symbols['!'] = exclamation
+# Can't really form a good dollar sign interpretation with 3x5 resolution.
+_dollarSign = [
+    e + e + e,
+    e + e + b,
+    e + e + e,
+    b + e + e,
+    e + e + e,
+]
 
-    # Can't really form a good dollar sign interpretation with 3x5 resolution.
-    dollarSign = [
-        e + e + e,
-        e + e + b,
-        e + e + e,
-        b + e + e,
-        e + e + e,
-    ]
-    symbols['$'] = dollarSign
+_equal = [
+    b + b + b,
+    e + e + e,
+    b + b + b,
+    e + e + e,
+    b + b + b,
+]
 
-    equal = [
-        b + b + b,
-        e + e + e,
-        b + b + b,
-        e + e + e,
-        b + b + b,
-    ]
-    symbols['='] = equal
+_minus = [
+    b + b + b,
+    b + b + b,
+    e + e + e,
+    b + b + b,
+    b + b + b,
+]
 
-    minus = [
-        b + b + b,
-        b + b + b,
-        e + e + e,
-        b + b + b,
-        b + b + b,
-    ]
-    symbols['-'] = minus
+_plus = [
+    b + b + b,
+    b + e + b,
+    e + e + e,
+    b + e + b,
+    b + b + b,
+]
 
-    plus = [
-        b + b + b,
-        b + e + b,
-        e + e + e,
-        b + e + b,
-        b + b + b,
-    ]
-    symbols['+'] = plus
+_apostrophe = [
+    e,
+    e,
+    b,
+    b,
+    b,
+]
 
-    apostrophe = [
-        e,
-        e,
-        b,
-        b,
-        b,
-    ]
-    symbols['\''] = apostrophe
+_hashtag = [
+    b + e + b + e + b,
+    e + e + e + e + e,
+    b + e + b + e + b,
+    e + e + e + e + e,
+    b + e + b + e + b,
+]
 
-    hashtag = [
-        b + e + b + e + b,
-        e + e + e + e + e,
-        b + e + b + e + b,
-        e + e + e + e + e,
-        b + e + b + e + b,
-    ]
-    symbols['#'] = hashtag
-
-    return symbols
+characters['?'] = _question
+characters['!'] = _exclamation
+characters['$'] = _dollarSign
+characters['='] = _equal
+characters['-'] = _minus
+characters['+'] = _plus
+characters['\''] = _apostrophe
+characters['#'] = _hashtag
 
 
 def construct_message(options):
@@ -425,9 +418,11 @@ def construct_message(options):
           The code will split on \':\'""")
     parser.add_argument('text', nargs='+', help='The text to print')
     parser.add_argument('-l', action='store_true',
-                        help='Use multiple emojis per letter. If theres only one word to print this will be default')
+                        help='Use a different emoji per letter. If theres only one word to print this will be default')
     parser.add_argument('-b', action='store', dest='blank',
                         default=':blank:', help='Specify the emoji to use for blank space')
+    parser.add_argument('-r', action='store_true',
+                        help="Use a random emoji for every emoji in the block. This will take precedence over -l")
 
     args = parser.parse_args(options)
 
@@ -437,15 +432,19 @@ def construct_message(options):
     if len(text) == 1:
         per_letter = True
 
+    use_random = args.r
+
     emojis = args.emojis.split(':')
     emojis = [e for e in emojis if e]
 
+    # add any missing ':'
     for i in range(len(emojis)):
         if emojis[i][0] != ':':
             emojis[i] = ':' + emojis[i]
         if emojis[i][-1] != ':':
             emojis[i] += ':'
 
+    # handle skin tones
     for i in range(len(emojis)):
         if 'skin-tone' in emojis[i]:
             if i > 0:
@@ -463,52 +462,55 @@ def construct_message(options):
     if blank[-1] != ':':
         blank += ':'
 
-
-letters = []
-numbers = []
-symbols = []
-symbol_keys = create_symbols('a', blank).keys()
-for e in emojis:
-    letters.append(create_letters(e, blank))
-    numbers.append(create_numbers(e, blank))
-    symbols.append(create_symbols(e, blank))
-
     message = ''
     blockheight = 5
-    e = 0
+    emoji_index = 0
+
+    # for each word in the message
     for word in text:
-        wordstart = e
-        for i in range(blockheight):
+        # store the current emoji index. This is needed to keep per_letter accurate in each row
+        wordstart = emoji_index
+
+        # for each row in the block letters
+        for row in range(blockheight):
             line = ''
             if per_letter:
-                e = wordstart
+                emoji_index = wordstart
+
+            # for each character in the word
             for char in word:
+                # Prepend a blank character between characters
                 if len(line) != 0:
                     line += blank
-                if char.isalpha():
-                    block = letters[e % len(letters)][ord(
-                        char.lower()) - ord('a')][i]
-                    line += block
-                elif char.isdigit():
-                    block = numbers[e % len(numbers)][ord(char) - ord('0')][i]
-                    line += block
-                # There does not appear to be a built-in check for symbols.
-                elif char in symbol_keys:
-                    block = symbols[e % len(symbols)][char][i]
-                    line += block
+                block = characters[char]
+
+                # for each column in the block
+                for col in range(len(block[row])):
+                    if block[row][col] == e:
+                        em = emojis[emoji_index]
+                        if (use_random):
+                            em = random.choice(emojis)
+                        line += em
+                    else:
+                        line += blank
+
                 if per_letter:
-                    e = e + 1
+                    emoji_index = (emoji_index + 1) % len(emojis)
+
             message += line + '\n'
+
         message += '\n\n'
+
         if not per_letter:
-            e = e + 1
+            emoji_index = (emoji_index + 1) % len(emojis)
+
     return message
 
 
 def lambda_handler(event, context):
     print(event)
 
-    params = urlparse.parse_qs(event['body'])
+    params = urllib.parse.parse_qs(event['body'])
     message = ''
     if 'text' not in params or not params['text']:
         message = 'Bad Request'
