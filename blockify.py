@@ -470,6 +470,7 @@ def construct_message(options):
     for word in text:
         # store the current emoji index. This is needed to keep per_letter accurate in each row
         wordstart = emoji_index
+        word = word.lower()
 
         # for each row in the block letters
         for row in range(blockheight):
