@@ -483,6 +483,11 @@ def construct_message(options):
                 # Prepend a blank character between characters
                 if len(line) != 0:
                     line += blank
+
+                # if this character doesn't have a block, skip it
+                if char not in characters.keys():
+                    continue
+
                 block = characters[char]
 
                 # for each column in the block
