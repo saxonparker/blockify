@@ -400,6 +400,22 @@ _hashtag = [
     b + e + b + e + b,
 ]
 
+_slash = [
+    b + b + b + b + e,
+    b + b + b + e + b,
+    b + b + e + b + b,
+    b + e + b + b + b,
+    e + b + b + b + b,
+]
+
+_backslash = [
+    e + b + b + b + b,
+    b + e + b + b + b,
+    b + b + e + b + b,
+    b + b + b + e + b,
+    b + b + b + b + e,
+]
+
 characters['?'] = _question
 characters['!'] = _exclamation
 characters['$'] = _dollarSign
@@ -408,6 +424,8 @@ characters['-'] = _minus
 characters['+'] = _plus
 characters['\''] = _apostrophe
 characters['#'] = _hashtag
+characters['/'] = _slash
+characters['\\'] = _backslash
 
 
 def construct_message(options):
